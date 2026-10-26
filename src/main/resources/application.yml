@@ -1,0 +1,35 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: secure-auth-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/auth}
+    username: ${SPRING_DATASOURCE_USERNAME:auth}
+    password: ${SPRING_DATASOURCE_PASSWORD:auth}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+auth:
+  jwt:
+    # Override in production via AUTH_JWT_SECRET (min 32 bytes for HS256).
+    secret: ${AUTH_JWT_SECRET:dev-only-secret-change-me-please-32bytes-minimum!!}
+    access-token-ttl: 15m
+    refresh-token-ttl: 7d
+    issuer: secure-auth-service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true

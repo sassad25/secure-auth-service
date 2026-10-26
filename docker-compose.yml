@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: auth
+      POSTGRES_USER: auth
+      POSTGRES_PASSWORD: auth
+    ports:
+      - "5432:5432"
+
+  auth-service:
+    build: .
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auth
+      SPRING_DATASOURCE_USERNAME: auth
+      SPRING_DATASOURCE_PASSWORD: auth
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET:-dev-only-secret-change-me-please-32bytes-minimum!!}
+    depends_on:
+      - postgres
+    ports:
+      - "9000:9000"
